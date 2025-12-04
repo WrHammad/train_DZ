@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>قطار الاستقلال | نسخة الموبايل</title>
+    <title>قطار الاستقلال | مظاهرات 1960</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&display=swap');
 
@@ -18,7 +18,6 @@
             --text-muted: #64748b;
             --header-h: 50px;
             --train-h: 90px;
-            --cards-h: 180px; /* ارتفاع منطقة البطاقات الثابتة تقريبي */
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
@@ -28,12 +27,12 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             margin: 0; padding: 0;
-            height: 100vh; height: 100dvh; /* دعم دقيق للموبايل */
+            height: 100vh; height: 100dvh;
             display: flex; flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- 1. الرأس المصغر (Compact Header) --- */
+        /* --- الرأس --- */
         header {
             height: var(--header-h);
             background: var(--surface);
@@ -53,7 +52,7 @@
             border: 1px solid #fecdd3;
         }
 
-        /* --- 2. منطقة القطار المضغوطة (Compact Train) --- */
+        /* --- القطار --- */
         .train-container {
             height: var(--train-h);
             background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%);
@@ -87,14 +86,11 @@
             transition: all 0.4s;
             position: relative;
         }
-        
-        /* تسميات المحطات صغيرة جداً */
         .station::after {
             content: attr(data-label); position: absolute; bottom: -18px;
             font-size: 0.6rem; color: var(--text-muted); font-weight: 600;
             white-space: nowrap;
         }
-
         .station.active {
             border-color: var(--secondary); color: var(--secondary);
             transform: scale(1.2); background: #fff;
@@ -113,11 +109,10 @@
             filter: drop-shadow(1px 3px 2px rgba(0,0,0,0.2));
         }
 
-        /* --- 3. منطقة اللعب (Scrollable Area) --- */
+        /* --- منطقة الأسئلة --- */
         .game-scroll-area {
             flex: 1;
             overflow-y: auto;
-            /* زيادة المسافة السفلية لضمان عدم تغطية البطاقات للمحتوى */
             padding: 20px 15px 220px; 
             background: var(--bg-body);
             display: flex; flex-direction: column;
@@ -135,32 +130,26 @@
 
         .slots-container { 
             display: flex; flex-direction: column; 
-            /* تغيير المحاذاة لتبدأ من الأعلى وتسمح بالتمرير الطبيعي */
             justify-content: flex-start; 
             flex-grow: 1; min-height: 150px;
         }
 
-        /* تنسيق الخانة الواحدة النشطة */
         .slot {
             background: white; border: 2px dashed #cbd5e1;
             border-radius: 16px; min-height: 100px;
             display: flex; align-items: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s;
             margin: 0 auto; width: 100%;
             position: relative;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-
         .slot.active {
-            border-color: var(--primary);
-            background: #fff;
-            transform: scale(1.02);
+            border-color: var(--primary); background: #fff;
+            transform: scale(1.02); border-style: solid;
             box-shadow: 0 10px 25px -5px rgba(0, 102, 51, 0.15);
-            border-style: solid;
             animation: slideIn 0.4s ease-out;
         }
         @keyframes slideIn { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
-
         .slot.filled {
             border-color: #22c55e; background: #dcfce7;
             border-style: solid; transform: scale(1);
@@ -182,7 +171,6 @@
             line-height: 1.4;
         }
         
-        /* رسالة التوجيه */
         .slot.active::before {
             content: '👇 اختر الإجابة الصحيحة'; 
             position: absolute; bottom: -25px; left: 0; right: 0;
@@ -191,26 +179,21 @@
         }
         @keyframes bounceHint { 0%, 100% {transform:translateY(0);} 50% {transform:translateY(3px);} }
 
-        /* --- 4. منطقة البطاقات الثابتة (Fixed Bottom Sheet) --- */
+        /* --- البطاقات الثابتة --- */
         .cards-sheet {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: white;
-            padding: 10px 15px 20px; /* مساحة للأجهزة ذات الحواف المستديرة */
+            padding: 10px 15px 20px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
             border-radius: 20px 20px 0 0;
             z-index: 50;
-            max-height: 35vh; /* أقصى ارتفاع 35% من الشاشة */
-            overflow-y: auto;
+            max-height: 35vh; overflow-y: auto;
         }
-        
         .sheet-handle {
             width: 40px; height: 4px; background: #e2e8f0;
             border-radius: 2px; margin: 0 auto 10px;
         }
-
-        .cards-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-        }
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
         .option-card {
             background: white; border: 1px solid #e2e8f0;
@@ -227,7 +210,7 @@
             background: #f8fafc;
         }
 
-        /* --- 5. الشاشات المنبثقة (Start/End) --- */
+        /* --- النوافذ المنبثقة --- */
         .overlay {
             position: fixed; inset: 0; z-index: 100;
             background: rgba(255,255,255,0.95);
@@ -267,18 +250,18 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- شاشة البداية: بسيطة جداً لتناسب أصغر الشاشات -->
+    <!-- شاشة البداية -->
     <div id="start-screen" class="overlay active">
         <div class="start-icon">🚂</div>
-        <h1 class="start-title">قطار الاستقلال</h1>
-        <p class="start-desc">رحلة 11 ديسمبر 1960.<br>رتب الأحداث التاريخية لتصل بالقطار إلى محطة الحرية.</p>
+        <h1 class="start-title">مظاهرات ديسمبر</h1>
+        <p class="start-desc">أسباب ووقائع مظاهرات 1960 وتأثيرها على الثورة الجزائرية.<br>رتب المعلومات بناءً على المصدر التاريخي.</p>
         
         <div style="display:flex; gap:15px; margin-bottom:25px; font-size:0.85rem; color:#64748b; background:#f1f5f9; padding:8px 15px; border-radius:20px;">
-            <span>🎯 4 محطات</span>
+            <span>🎯 4 مستويات</span>
             <span>❤ فرصتان</span>
         </div>
 
-        <button class="btn-action" onclick="Game.start()">ابدأ اللعب الآن 🚩</button>
+        <button class="btn-action" onclick="Game.start()">ابدأ التحدي 🚩</button>
     </div>
 
     <!-- واجهة اللعب -->
@@ -297,10 +280,10 @@
         <div class="train-container">
             <div class="rail-track">
                 <div class="track-progress" id="track-fill"></div>
-                <div class="station" id="st-4" data-label="النهاية">4</div>
-                <div class="station" id="st-3" data-label="">3</div>
-                <div class="station" id="st-2" data-label="">2</div>
-                <div class="station active" id="st-1" data-label="البداية">1</div>
+                <div class="station" id="st-4" data-label="النتائج">4</div>
+                <div class="station" id="st-3" data-label="الرموز">3</div>
+                <div class="station" id="st-2" data-label="الوقائع">2</div>
+                <div class="station active" id="st-1" data-label="الأسباب">1</div>
                 <div id="train-icon">🚂</div>
             </div>
         </div>
@@ -328,8 +311,8 @@
     <!-- شاشة الفوز -->
     <div id="win-screen" class="overlay">
         <div class="start-icon">🇩🇿</div>
-        <h1 class="start-title" style="color:var(--primary);">مبروك يا بطل!</h1>
-        <p class="start-desc">لقد أوصلت القطار إلى محطة الاستقلال بسلام.</p>
+        <h1 class="start-title" style="color:var(--primary);">نصر تاريخي!</h1>
+        <p class="start-desc">لقد أكملت المراحل بنجاح.<br>أثبتت المظاهرات أن إرادة الشعب حقيقة لا يمكن تجاهلها.</p>
         <button class="btn-action" onclick="location.reload()">لعب مرة أخرى ↺</button>
     </div>
 
@@ -337,43 +320,65 @@
     <div id="lose-screen" class="overlay">
         <div class="start-icon" style="filter:grayscale(1);">🚂</div>
         <h1 class="start-title" style="color:var(--secondary);">توقف القطار!</h1>
-        <p class="start-desc">نفذت محاولاتك في هذه المحطة. لا تيأس!</p>
+        <p class="start-desc">المعلومات التاريخية تحتاج إلى دقة.<br>حاول مرة أخرى.</p>
         <button class="btn-action" style="background:#475569;" onclick="location.reload()">إعادة المحاولة ↺</button>
     </div>
 
     <script>
+        /* البيانات محدثة بدقة حسب طلب المستخدم للنص الجغرافي */
         const Levels = [
             {
-                type: 'seq', title: "التسلسل الزمني", desc: "اضغط على الحدث المناسب للتاريخ:",
-                slots: ["04 نوفمبر", "09 ديسمبر", "10 ديسمبر", "11 ديسمبر", "20 ديسمبر"],
+                type: 'seq', 
+                title: "الأسباب والسياق", 
+                desc: "رتب الأسباب التي مهدت لاندلاع المظاهرات حسب سياقها في النص:",
+                slots: ["المشروع السياسي", "التحرك المضاد", "المُنظم", "الهدف السياسي", "الحدث الدولي"],
                 ans: [1, 2, 3, 4, 5],
                 items: [
-                    {id:1, txt:"مشروع ديغول"}, {id:2, txt:"انطلاق الشرارة"},
-                    {id:3, txt:"اتساع المظاهرات"}, {id:4, txt:"مظاهرات العاصمة"}, {id:5, txt:"انتصار أممي"}
+                    {id:1, txt:"مشروع ديغول 'الجزائر جزائرية'"}, 
+                    {id:2, txt:"مظاهرات المعمرين (FAF) المتطرفة"},
+                    {id:3, txt:"جبهة التحرير الوطني (FLN)"}, 
+                    {id:4, txt:"إسقاط فكرة 'القوة الثالثة'"}, 
+                    {id:5, txt:"نقاش القضية في الأمم المتحدة"}
                 ]
             },
             {
-                type: 'seq', title: "المسار الجغرافي", desc: "أين بدأت وكيف انتشرت؟",
-                slots: ["الانطلاق", "اليوم 1", "اليوم 2", "اليوم 3", "التعميم"],
+                type: 'seq', 
+                title: "المسار الجغرافي (محدث)", 
+                desc: "رتب مراحل انتشار المظاهرات زمنياً وجغرافياً:",
+                slots: ["09 ديسمبر (الانطلاق)", "10 ديسمبر (الغرب)", "10 ديسمبر (العاصمة)", "11 ديسمبر (الذروة)", "الشمولية شرقاً"],
                 ans: [1, 2, 3, 4, 5],
                 items: [
-                    {id:1, txt:"عين تموشنت"}, {id:2, txt:"تلمسان"}, {id:3, txt:"وهران"},
-                    {id:4, txt:"الجزائر العاصمة"}, {id:5, txt:"باقي الولايات"}
+                    {id:1, txt:"عين تموشنت وتلمسان"}, 
+                    {id:2, txt:"وهران والشلف"}, 
+                    {id:3, txt:"حي بلكور (بداية العاصمة)"}, 
+                    {id:4, txt:"القصبة، باب الواد، تيزي وزو"}, 
+                    {id:5, txt:"قسنطينة، عنابة، وسكيكدة"}
                 ]
             },
             {
-                type: 'quiz', title: "رموز السيادة", desc: "ما الرمز الذي رفعه الشعب بقوة؟",
-                q: "ما هو الرمز الذي أدهش الصحافة العالمية؟",
+                type: 'quiz', 
+                title: "الشعارات والرموز", 
+                desc: "اختر الإجابة الصحيحة بناءً على النص:",
+                q: "ما هو الشعار الأساسي الذي رفعه المتظاهرون للرد على مشروع ديغول، بجانب الاستقلال التام؟",
                 ans: 'B',
-                opts: [{id:'A', txt:"لافتات اقتصادية"}, {id:'B', txt:"العلم الوطني 🇩🇿"}, {id:'C', txt:"صور ديغول"}]
+                opts: [
+                    {id:'A', txt:"الجزائر فرنسية"}, 
+                    {id:'B', txt:"التفاوض مع جبهة التحرير"}, 
+                    {id:'C', txt:"تأييد القوة الثالثة"}
+                ]
             },
             {
-                type: 'seq', title: "نتائج المظاهرات", desc: "ماذا حققت هذه التضحيات؟",
-                slots: ["سياسياً", "عسكرياً", "دبلوماسياً", "استراتيجياً", "النتيجة"],
+                type: 'seq', 
+                title: "النتائج والتأثير", 
+                desc: "رتب الآثار المترتبة على المظاهرات:",
+                slots: ["تأثير على ديغول", "مكسب دبلوماسي", "تأثير عسكري", "تأثير داخلي", "النتيجة النهائية"],
                 ans: [1, 2, 3, 4, 5],
                 items: [
-                    {id:1, txt:"سقوط 'الجزائر فرنسية'"}, {id:2, txt:"فك الخناق عن الجبل"},
-                    {id:3, txt:"اعتراف الأمم المتحدة"}, {id:4, txt:"إجبار فرنسا عالتفاوض"}, {id:5, txt:"حتمية الاستقلال"}
+                    {id:1, txt:"الاقتناع بحتمية التفاوض"}, 
+                    {id:2, txt:"اعتراف الأمم المتحدة بتقرير المصير"}, 
+                    {id:3, txt:"تخفيف الضغط على المجاهدين"}, 
+                    {id:4, txt:"التفاف الشعب حول القيادة"}, 
+                    {id:5, txt:"الطريق نحو مفاوضات إيفيان"}
                 ]
             }
         ];
@@ -405,12 +410,8 @@
                 // Scroll slots to top
                 document.querySelector('.game-scroll-area').scrollTop = 0;
 
-                // إعداد منطقة البطاقات (الخيارات)
                 if(data.type === 'seq') {
-                    // عرض السؤال الأول فقط
                     this.renderCurrentSlot();
-
-                    // خلط الخيارات
                     let arr = [...data.items].sort(()=>Math.random()-0.5);
                     arr.forEach(item => {
                         let div = document.createElement('div');
@@ -420,7 +421,6 @@
                     });
                     cardsCont.style.gridTemplateColumns = "1fr 1fr";
                 } else {
-                    // Quiz Mode
                     const slotsCont = document.getElementById('slots-container');
                     slotsCont.innerHTML = `
                     <div class="slot active" style="padding:15px; min-height:120px; text-align:center; border-color:var(--primary);">
@@ -441,11 +441,10 @@
             renderCurrentSlot() {
                 const data = Levels[this.lvl];
                 const slotsCont = document.getElementById('slots-container');
-                slotsCont.innerHTML = ''; // مسح القديم
+                slotsCont.innerHTML = '';
 
                 if(this.step < data.slots.length) {
                     const label = data.slots[this.step];
-                    // عرض الخانة الحالية فقط
                     slotsCont.innerHTML = `
                     <div class="slot active" id="current-slot">
                         <div class="slot-num">
@@ -462,31 +461,23 @@
 
             check(item, el) {
                 const correct = Levels[this.lvl].ans[this.step];
-                
                 if(item.id === correct) {
-                    this.toast("✅ إجابة صحيحة");
-                    
-                    // تحديث واجهة الخانة الحالية لتظهر أنها ممتلئة
+                    this.toast("✅ صحيح");
                     const slot = document.getElementById('current-slot');
                     document.getElementById('slot-answer-txt').innerText = item.txt;
                     document.getElementById('slot-answer-txt').style.color = "#166534";
                     slot.classList.remove('active'); 
                     slot.classList.add('filled');
-                    
-                    // إخفاء البطاقة المستخدمة
                     el.style.opacity = '0'; el.style.pointerEvents = 'none';
-                    
                     this.step++;
                     
-                    // الانتظار قليلاً ثم الانتقال للسؤال التالي أو المحطة التالية
                     setTimeout(() => {
                         if(this.step >= Levels[this.lvl].slots.length) {
                             this.nextLvl();
                         } else {
-                            this.renderCurrentSlot(); // عرض السؤال التالي
+                            this.renderCurrentSlot();
                         }
-                    }, 600); // تأخير بسيط لرؤية النتيجة
-
+                    }, 600);
                 } else {
                     this.fail();
                 }
@@ -505,7 +496,6 @@
                 this.tries--;
                 document.getElementById('lives').innerText = this.tries;
                 this.toast("❌ خطأ", "error");
-                
                 if(this.tries <= 0) {
                     setTimeout(() => document.getElementById('lose-screen').classList.add('active'), 300);
                 }
@@ -523,10 +513,8 @@
             updateTrainUI() {
                 let pct = this.lvl * 25;
                 if(this.lvl === 4) pct = 100;
-
                 document.getElementById('train-icon').style.right = pct + "%";
                 document.getElementById('track-fill').style.width = pct + "%";
-
                 for(let i=1; i<=4; i++) {
                     const st = document.getElementById(`st-${i}`);
                     st.className = 'station';

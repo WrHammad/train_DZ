@@ -221,8 +221,9 @@
         .overlay.active { display: flex; animation: fadeIn 0.3s; }
         
         .start-icon { font-size: 4rem; margin-bottom: 10px; }
-        .start-title { font-size: 1.8rem; color: var(--text-main); margin: 0; font-weight: 900; }
-        .start-desc { font-size: 0.95rem; color: var(--text-muted); margin: 10px 0 20px; line-height: 1.5; max-width: 300px;}
+        .start-title { font-size: 2rem; color: var(--text-main); margin: 0; font-weight: 900; color: var(--primary);}
+        .start-subtitle { font-size: 1.2rem; color: var(--secondary); margin: 5px 0 15px; font-weight: 700; }
+        .start-credit { font-size: 0.9rem; color: var(--text-muted); background: #f1f5f9; padding: 6px 15px; border-radius: 20px; margin-bottom: 20px; font-weight: 600;}
         
         .btn-action {
             width: 100%; max-width: 280px;
@@ -250,13 +251,14 @@
 
     <div id="toast" class="toast"></div>
 
-    <!-- شاشة البداية -->
+    <!-- شاشة البداية المعدلة -->
     <div id="start-screen" class="overlay active">
         <div class="start-icon">🚂</div>
-        <h1 class="start-title">مظاهرات ديسمبر</h1>
-        <p class="start-desc">أسباب ووقائع مظاهرات 1960 وتأثيرها على الثورة الجزائرية.<br>رتب المعلومات بناءً على المصدر التاريخي.</p>
+        <h1 class="start-title">قطار الاستقلال</h1>
+        <h2 class="start-subtitle">مظاهرات 11 ديسمبر 1960</h2>
+        <div class="start-credit">من اعداد الكاتب حماد بن عيسى</div>
         
-        <div style="display:flex; gap:15px; margin-bottom:25px; font-size:0.85rem; color:#64748b; background:#f1f5f9; padding:8px 15px; border-radius:20px;">
+        <div style="display:flex; gap:15px; margin-bottom:25px; font-size:0.85rem; color:#64748b; background:#f1f5f9; padding:8px 15px; border-radius:20px; margin-top:10px;">
             <span>🎯 4 مستويات</span>
             <span>❤ فرصتان</span>
         </div>
@@ -312,7 +314,7 @@
     <div id="win-screen" class="overlay">
         <div class="start-icon">🇩🇿</div>
         <h1 class="start-title" style="color:var(--primary);">نصر تاريخي!</h1>
-        <p class="start-desc">لقد أكملت المراحل بنجاح.<br>أثبتت المظاهرات أن إرادة الشعب حقيقة لا يمكن تجاهلها.</p>
+        <p class="start-desc" style="margin-top:15px;">لقد أكملت المراحل بنجاح.<br>أثبتت المظاهرات أن إرادة الشعب حقيقة لا يمكن تجاهلها.</p>
         <button class="btn-action" onclick="location.reload()">لعب مرة أخرى ↺</button>
     </div>
 
@@ -320,17 +322,17 @@
     <div id="lose-screen" class="overlay">
         <div class="start-icon" style="filter:grayscale(1);">🚂</div>
         <h1 class="start-title" style="color:var(--secondary);">توقف القطار!</h1>
-        <p class="start-desc">المعلومات التاريخية تحتاج إلى دقة.<br>حاول مرة أخرى.</p>
+        <p class="start-desc" style="margin-top:15px;">المعلومات التاريخية تحتاج إلى دقة.<br>حاول مرة أخرى.</p>
         <button class="btn-action" style="background:#475569;" onclick="location.reload()">إعادة المحاولة ↺</button>
     </div>
 
     <script>
-        /* البيانات محدثة بدقة حسب طلب المستخدم للنص الجغرافي */
+        /* البيانات محدثة لإزالة الإشارات للمصدر النصي */
         const Levels = [
             {
                 type: 'seq', 
                 title: "الأسباب والسياق", 
-                desc: "رتب الأسباب التي مهدت لاندلاع المظاهرات حسب سياقها في النص:",
+                desc: "رتب الأسباب التي مهدت لاندلاع المظاهرات:",
                 slots: ["المشروع السياسي", "التحرك المضاد", "المُنظم", "الهدف السياسي", "الحدث الدولي"],
                 ans: [1, 2, 3, 4, 5],
                 items: [
@@ -343,7 +345,7 @@
             },
             {
                 type: 'seq', 
-                title: "المسار الجغرافي (محدث)", 
+                title: "المسار الجغرافي", 
                 desc: "رتب مراحل انتشار المظاهرات زمنياً وجغرافياً:",
                 slots: ["09 ديسمبر (الانطلاق)", "10 ديسمبر (الغرب)", "10 ديسمبر (العاصمة)", "11 ديسمبر (الذروة)", "الشمولية شرقاً"],
                 ans: [1, 2, 3, 4, 5],
@@ -358,7 +360,7 @@
             {
                 type: 'quiz', 
                 title: "الشعارات والرموز", 
-                desc: "اختر الإجابة الصحيحة بناءً على النص:",
+                desc: "اختر الإجابة الصحيحة:",
                 q: "ما هو الشعار الأساسي الذي رفعه المتظاهرون للرد على مشروع ديغول، بجانب الاستقلال التام؟",
                 ans: 'B',
                 opts: [

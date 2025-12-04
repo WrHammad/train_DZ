@@ -18,7 +18,7 @@
             --text-muted: #64748b;
             --header-h: 50px;
             --train-h: 90px;
-            --cards-h: 180px; /* ارتفاع منطقة البطاقات الثابتة */
+            --cards-h: 180px; /* ارتفاع منطقة البطاقات الثابتة تقريبي */
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
@@ -117,9 +117,11 @@
         .game-scroll-area {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 15px 100px; /* مساحة فارغة في الأسفل عشان البطاقات الثابتة ما تغطيش آخر سؤال */
+            /* زيادة المسافة السفلية لضمان عدم تغطية البطاقات للمحتوى */
+            padding: 20px 15px 220px; 
             background: var(--bg-body);
             display: flex; flex-direction: column;
+            scroll-behavior: smooth;
         }
 
         .level-info {
@@ -132,7 +134,9 @@
         .level-info p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
 
         .slots-container { 
-            display: flex; flex-direction: column; justify-content: center; 
+            display: flex; flex-direction: column; 
+            /* تغيير المحاذاة لتبدأ من الأعلى وتسمح بالتمرير الطبيعي */
+            justify-content: flex-start; 
             flex-grow: 1; min-height: 150px;
         }
 

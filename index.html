@@ -4,288 +4,444 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قطار الاستقلال: اختبار 11 ديسمبر</title>
+    <!-- استيراد خط عربي جميل من Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS للتصميم باستخدام ألوان العلم الجزائري وتحسينات الهاتف */
         :root {
-            --color-green: #006241; /* أخضر العلم */
-            --color-white: #FFFFFF; /* أبيض العلم */
-            --color-red: #E70013;   /* أحمر العلم */
-            --color-black: #1a1a1a;
-            --color-bg-light: #f0f4f8;
-            --color-text: var(--color-black);
-            --touch-target-min: 48px; /* معيار حجم زر اللمس */
+            --color-green: #006233; /* أخضر علم الجزائر الداكن */
+            --color-red: #D21034;   /* أحمر علم الجزائر */
+            --color-white: #FFFFFF;
+            --color-bg: #f3f4f6;
+            --color-text: #2d3748;
+            --color-rail-wood: #8d6e63;
+            --color-rail-steel: #b0bec5;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--color-bg-light);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--color-bg);
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
             color: var(--color-text);
-            padding: 10px; /* تقليل الحشو للهاتف */
-            text-align: center;
-            line-height: 1.5;
+            padding: 15px;
+            margin: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        /* العناوين والمنطقة الرئيسية */
-        h1 { color: var(--color-red); margin-bottom: 8px; font-size: 1.8em; }
-        h2 { color: var(--color-green); font-size: 1.5em; }
+
+        /* حاوية اللعبة الرئيسية - تصميم البطاقة */
         #game-area, #start-screen {
             background-color: var(--color-white);
-            padding: 20px 15px;
-            border-radius: 15px; /* زوايا أكثر استدارة */
-            max-width: 650px; /* زيادة بسيطة للعرض */
-            margin: 15px auto;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3); /* ظل أقوى */
-            border: 4px solid var(--color-green); /* حدود أوضح */
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px; /* عرض مثالي للهاتف */
+            margin: 20px auto;
+            box-shadow: var(--shadow-card);
+            border-top: 6px solid var(--color-green); /* لمسة وطنية ناعمة */
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        /* تصميم صفحة البداية */
-        #start-screen p { font-size: 1.15em; line-height: 1.7; }
-        #start-screen ul { padding-right: 20px; text-align: right; font-size: 1.05em;}
-        .author-info { margin-top: 25px; font-style: italic; color: #444; font-size: 1em; }
 
-        /* شريط تقدم القطار (الخريطة الزمنية) */
+        /* العناوين */
+        h1 {
+            color: var(--color-red);
+            margin: 0 0 10px 0;
+            font-size: 1.5rem; /* حجم متوازن */
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--color-green);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        /* تصميم صفحة البداية */
+        #start-screen p {
+            font-size: 0.95rem;
+            color: #4b5563;
+            margin-bottom: 15px;
+        }
+
+        #start-screen ul {
+            padding-right: 20px;
+            text-align: right;
+            font-size: 0.9rem;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 15px 25px 15px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        #start-screen li { margin-bottom: 8px; }
+
+        .author-info {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+            text-align: center;
+        }
+
+        /* تصميم سكة القطار */
         #progress-bar {
-            height: var(--touch-target-min);
-            background: repeating-linear-gradient(
-                to right,
-                var(--color-white), var(--color-white) 24.5%,
-                var(--color-red) 24.5%, var(--color-red) 25.5%, /* فواصل حمراء للمحطات */
-                var(--color-white) 25.5%, var(--color-white) 49.5%,
-                var(--color-red) 49.5%, var(--color-red) 50.5%,
-                var(--color-white) 50.5%, var(--color-white) 74.5%,
-                var(--color-red) 74.5%, var(--color-red) 75.5%,
-                var(--color-white) 75.5%, var(--color-white) 100%
+            height: 30px;
+            background-color: #e0e0e0;
+            /* رسم العوارض الخشبية للسكة */
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 10px,
+                var(--color-rail-wood) 10px,
+                var(--color-rail-wood) 14px
             );
-            border-radius: 18px; 
-            overflow: hidden; 
-            margin-bottom: 25px; 
-            border: 2px solid var(--color-green);
-            position: relative; /* للسماح بوضع الأيقونة داخله */
+            border-radius: 15px;
+            margin: 20px 0 35px 0; /* مساحة للأيقونة */
+            border: 2px solid var(--color-rail-steel);
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
-        #train-progress { 
-            height: 100%; 
-            background-color: var(--color-green); 
-            transition: width 0.7s ease-out; /* حركة أبطأ وأكثر سلاسة */
-            display: flex; 
-            align-items: center; 
-            justify-content: flex-end; 
-            opacity: 0.8;
+
+        /* الشريط الملون للتقدم */
+        #train-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-green), #4ade80);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 13px;
+            opacity: 0.9;
         }
-        #train-icon { 
-            font-size: 28px; /* حجم أكبر للهاتف */
-            color: var(--color-red); 
-            text-shadow: 1px 1px 2px var(--color-black); /* ظل واضح */
-            margin-right: -10px; /* سحب الأيقونة للخارج قليلاً */
-            animation: bounce 1s infinite alternate, pulse 1.5s infinite; 
-            position: absolute; /* وضع الأيقونة فوق شريط التقدم */
-            transition: left 0.7s ease-out;
+
+        /* أيقونة القطار */
+        #train-icon {
+            font-size: 32px;
+            position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-55%);
+            transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(2px 4px 3px rgba(0,0,0,0.2));
+            z-index: 10;
         }
-        @keyframes bounce { from { transform: translateY(-50%); } to { transform: translateY(-60%); } }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-        
-        /* منطقة الأسئلة والأزرار */
-        .question-text { font-size: 1.4em; margin-bottom: 25px; font-weight: bold; color: var(--color-black); }
+
+        /* علامات المحطات على السكة */
+        .station-marker {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--color-red);
+            opacity: 0.5;
+            z-index: 5;
+        }
+
+        /* النصوص والأسئلة */
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* الأزرار التفاعلية */
         .choice-btn {
-            display: block; 
-            min-height: var(--touch-target-min); /* هدف لمس مثالي */
-            width: 95%; /* أضيق قليلا من الحاوية لتبدو أفضل */
-            padding: 12px; 
-            margin: 10px auto; 
-            background-color: var(--color-green); 
-            color: var(--color-white); 
-            border: 2px solid var(--color-white); /* حدود بيضاء للتباين */
-            border-radius: 10px; 
-            cursor: pointer; 
-            transition: background-color 0.2s, transform 0.1s, box-shadow 0.1s;
-            font-size: 1.1em; /* خط أكبر */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 50px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background: var(--color-white);
+            color: var(--color-text);
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 0 #e5e7eb; /* تأثير ثلاثي الأبعاد بسيط */
+            position: relative;
+            overflow: hidden;
         }
-        .choice-btn:active { transform: translateY(1px); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .choice-btn:hover:not(:disabled) { background-color: #004d99; }
-        .choice-btn.correct { background-color: darkgreen; border-color: var(--color-white); }
-        .choice-btn.incorrect { background-color: var(--color-red); border-color: var(--color-white); }
-        .choice-btn:disabled { opacity: 0.8; cursor: not-allowed; }
-        #feedback { margin-top: 20px; font-size: 1.2em; padding: 10px; border-radius: 8px; font-weight: bold;}
-        #fuel-indicator { font-weight: bold; color: var(--color-red); margin-bottom: 20px; font-size: 1.2em; border-bottom: 2px dashed #ccc; padding-bottom: 10px;}
-        #start-button { background-color: var(--color-red); font-size: 1.3em; padding: 15px; border-color: var(--color-white); }
-        
+
+        .choice-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            border-color: var(--color-green);
+            background-color: #f0fdf4;
+            color: var(--color-green);
+        }
+
+        /* حالات الإجابة */
+        .choice-btn.correct {
+            background-color: var(--color-green);
+            color: white;
+            border-color: var(--color-green);
+            box-shadow: 0 2px 0 #004d28;
+        }
+
+        .choice-btn.incorrect {
+            background-color: var(--color-red);
+            color: white;
+            border-color: var(--color-red);
+            box-shadow: 0 2px 0 #9b0b26;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* زر البداية */
+        #start-button {
+            background: linear-gradient(to bottom right, var(--color-red), #e11d48);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.4);
+            font-size: 1.1rem;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        #start-button:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        /* منطقة الوقود (المحاولات) */
+        #fuel-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff1f2;
+            padding: 8px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #fecdd3;
+        }
+        #fuel-text { font-size: 0.9rem; color: #9f1239; font-weight: bold; }
+        .fuel-icon { color: var(--color-red); margin-left: 2px; }
+
+        /* منطقة التغذية الراجعة */
+        #feedback {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            display: none; /* مخفي افتراضياً */
+        }
     </style>
 </head>
 <body>
 
     <!-- صفحة البداية -->
     <div id="start-screen">
-        <h1>قطار الاستقلال: محطة 11 ديسمبر 1960</h1>
-        <h2>مبادئ اللعبة باختصار</h2>
-        <p>مرحباً بك في رحلة قطار الاستقلال! مهمتك هي إيصال القطار إلى محطة الحرية بالمرور عبر 4 محطات رئيسية تمثل جوانب مظاهرات ديسمبر 1960 الحقيقية.</p>
+        <div style="text-align: center; margin-bottom: 15px; font-size: 40px;">🇩🇿</div>
+        <h1>قطار الاستقلال</h1>
+        <h2 style="font-size: 1rem; color: #666; margin-top: -5px;">محطة مظاهرات 11 ديسمبر 1960</h2>
+        
+        <p>مرحباً أيها البطل! هل أنت مستعد لقيادة القطار عبر التاريخ نحو محطة الحرية؟</p>
         
         <ul>
-            <li style="text-align: right; margin-bottom: 10px;">
-                <strong>المحطات والأسئلة:</strong> الرحلة مقسمة إلى 4 محطات (محاور تاريخية). كل محطة تحتوي على 3 أسئلة (المجموع 12 سؤال). إجابتك الصحيحة هي وقود القطار الذي يسرعه نحو الاستقلال.
-            </li>
-            <li style="text-align: right; margin-bottom: 10px;">
-                <strong>وقود النصر:</strong> لديك 3 فرص محاولة (وقود نصر). الإجابة الخاطئة تستنزف الوقود. نفاد الوقود يؤدي إلى توقف القطار وفشل المهمة.
-            </li>
-            <li style="text-align: right;">
-                <strong>الهدف:</strong> الإجابة على جميع الأسئلة الـ 12 بنجاح للوصول إلى محطة النصر النهائي والاحتفال بالانتصار الدبلوماسي.
-            </li>
+            <li>🚩 <strong>المهمة:</strong> أجب على 12 سؤالاً لتصل إلى الاستقلال.</li>
+            <li>⛽ <strong>الوقود:</strong> لديك 3 محاولات فقط. حافظ عليها!</li>
+            <li>🚂 <strong>المسار:</strong> 4 محطات تاريخية رئيسية.</li>
         </ul>
 
-        <button id="start-button" class="choice-btn" onclick="showGame()">انطلق نحو الحرية!</button>
+        <button id="start-button" class="choice-btn" onclick="showGame()">ابدأ الرحلة الآن 🚂</button>
         <div class="author-info">
-            من إعداد الكاتب: حماد بن عيسى
+            تصميم وإعداد: حماد بن عيسى
         </div>
     </div>
 
-    <!-- منطقة اللعب (تكون مخفية في البداية) -->
+    <!-- منطقة اللعب -->
     <div id="game-area" style="display: none;">
-        <p id="fuel-indicator">وقود النصر (فرص المحاولة): <span id="fuel-count">3</span></p>
+        <!-- عداد الوقود -->
+        <div id="fuel-container">
+            <span id="fuel-text">وقود النصر:</span>
+            <div id="fuel-icons">
+                <!-- سيتم ملؤه بواسطة JS -->
+            </div>
+        </div>
 
-        <!-- شريط تقدم القطار -->
+        <!-- شريط التقدم -->
         <div id="progress-bar">
+            <!-- علامات المحطات -->
+            <div class="station-marker" style="left: 25%"></div>
+            <div class="station-marker" style="left: 50%"></div>
+            <div class="station-marker" style="left: 75%"></div>
+            
             <div id="train-progress"></div>
-             <span id="train-icon">🚂</span>
+            <div id="train-icon">🚂</div>
         </div>
 
         <h2 id="station-title">...</h2>
         <p class="question-text" id="question-text"></p>
+        
         <div id="choices">
-            <!-- ستظهر خيارات الأسئلة هنا -->
+            <!-- الخيارات -->
         </div>
-        <p id="feedback"></p>
+        
+        <div id="feedback"></div>
     </div>
 
     <script>
-        // 1. تعريف مؤشرات اللعبة
+        // المتغيرات
         let currentQuestionIndex = 0;
         let correctAnswersCount = 0;
         let fuelPoints = 3;
-        const totalQuestions = 12; // 4 محطات * 3 أسئلة
+        const totalQuestions = 12;
         const totalStations = 4;
 
-        // 2. قاعدة بيانات الأسئلة (تم الحفاظ عليها بالكامل)
+        // البيانات
         const quizData = [
             // المحطة 1: صدمة ديغول
             {
-                station: "1. صدمة ديغول (الأسباب)",
-                question: "ما هو المشروع الذي حاول الجنرال ديغول شرحه خلال زيارته في ديسمبر 1960، والذي ردت عليه المظاهرات؟",
-                options: ["الجزائر فرنسية", "الجزائر جزائرية", "الجزائر مستعمرة", "الجزائر مستقلة فوراً"],
+                station: "محطة 1: التحدي السياسي",
+                question: "ما هو المشروع الذي حاول ديغول فرضه خلال زيارته في ديسمبر 1960؟",
+                options: ["الجزائر فرنسية", "الجزائر جزائرية", "الجزائر مستعمرة", "الحكم الذاتي المحدود"],
                 answer: "الجزائر جزائرية",
                 cite: 6
             },
             {
-                station: "1. صدمة ديغول (الأسباب)",
-                question: "ماذا كان هدف جبهة التحرير الوطني من تنظيم المظاهرات رداً على ديغول؟",
-                options: ["تأجيل الاستفتاء", "تهميش جبهة التحرير الوطني", "إجهاض محاولاته لتهميش جبهة التحرير الوطني", "الانضمام للقوة الثالثة"],
-                answer: "إجهاض محاولاته لتهميش جبهة التحرير الوطني",
+                station: "محطة 1: التحدي السياسي",
+                question: "لماذا نظمت جبهة التحرير هذه المظاهرات؟",
+                options: ["لتأييد ديغول", "لإجهاض محاولة تهميش الجبهة", "لطلب المساعدات", "لإيقاف الحرب مؤقتاً"],
+                answer: "لإجهاض محاولة تهميش الجبهة",
                 cite: 8
             },
             {
-                station: "1. صدمة ديغول (الأسباب)",
-                question: "إلى جانب زيارة ديغول، ساهم عامل دولي في توقيت المظاهرات. ما هو؟",
-                options: ["اجتماع مجلس الأمن", "انعقاد الدورة 15 للأمم المتحدة لمناقشة القضية الجزائرية", "اتفاقيات إيفيان", "مؤتمر باندونغ"],
-                answer: "انعقاد الدورة 15 للأمم المتحدة لمناقشة القضية الجزائرية",
+                station: "محطة 1: التحدي السياسي",
+                question: "ما هو الحدث الدولي الذي تزامن مع المظاهرات؟",
+                options: ["كأس العالم", "دورة الأمم المتحدة (15)", "مؤتمر الصومام", "اتفاقيات إيفيان"],
+                answer: "دورة الأمم المتحدة (15)",
                 cite: 10
             },
             
-            // المحطة 2: الرد الشعبي والرموز
+            // المحطة 2: الرد الشعبي
             {
-                station: "2. الرد الشعبي والرموز",
-                question: "أي من الشعارات التالية كان الأبرز في المظاهرات، معبراً عن المطلب الأساسي؟",
-                options: ["تحيا الجزائر الفرنسية", "التعاون المشترك", "الاستقلال التام", "الاندماج مع فرنسا"],
+                station: "محطة 2: صوت الشعب",
+                question: "ما هو الشعار الأبرز الذي رفعه المتظاهرون؟",
+                options: ["الجزائر فرنسية", "الخبز والماء", "الاستقلال التام", "الاندماج"],
                 answer: "الاستقلال التام",
                 cite: 23
             },
             {
-                station: "2. الرد الشعبي والرموز",
-                question: "ما هو الدور الذي وصفته المصادر بأنه 'محرك أساسي' للمظاهرات؟",
-                options: ["دور الفلاحين", "دور العمال", "دور المرأة الجزائرية", "دور الطلبة"],
-                answer: "دور المرأة الجزائرية",
+                station: "محطة 2: صوت الشعب",
+                question: "من وصفت المصادر بأنهم كانوا 'المحرك الأساسي' للمظاهرات؟",
+                options: ["المرأة الجزائرية", "التجار", "الفلاحون", "الأجانب"],
+                answer: "المرأة الجزائرية",
                 cite: 20
             },
             {
-                station: "2. الرد الشعبي والرموز",
-                question: "ماذا أصبح يمثل العلم الوطني الجزائري خلال المظاهرات؟",
-                options: ["رمز للتفاوض", "رمز للحرية والتحدي", "رمز للهدنة", "رمز للمصالح المشتركة"],
-                answer: "رمز للحرية والتحدي",
+                station: "محطة 2: صوت الشعب",
+                question: "ماذا كان يمثل العلم الوطني في تلك المظاهرات؟",
+                options: ["زينة للشوارع", "رمز الحرية والتحدي", "إشارة مرور", "رمز للتفاوض"],
+                answer: "رمز الحرية والتحدي",
                 cite: 22
             },
             
-            // المحطة 3: وحشية القمع
+            // المحطة 3: المواجهة
             {
-                station: "3. وحشية القمع",
-                question: "بمَ واجهت قوات الاحتلال الجماهير الأعزل؟",
-                options: ["بالورود والمفاوضات", "بالعنف الشديد والقسوة الوحشية", "بالتهدئة والدعوة للحوار", "بتوزيع المساعدات"],
-                answer: "بالعنف الشديد والقسوة الوحشية",
+                station: "محطة 3: الثبات والصمود",
+                question: "كيف واجهت فرنسا المتظاهرين العزل؟",
+                options: ["بالحوار", "بالعنف والقسوة الوحشية", "بالاعتقالات فقط", "بالتجاهل"],
+                answer: "بالعنف والقسوة الوحشية",
                 cite: 24
             },
              {
-                station: "3. وحشية القمع",
-                question: "ما هو رد الفعل الذي جاءت المظاهرات الوطنية رداً عليه أيضاً؟",
-                options: ["اجتماعات الحكومة المؤقتة", "تحركات المستوطنين المتطرفين وجبهة الجزائر الفرنسية (FAF)", "قرارات الجامعة العربية", "المبادرات السلمية الدولية"],
-                answer: "تحركات المستوطنين المتطرفين وجبهة الجزائر الفرنسية (FAF)",
+                station: "محطة 3: الثبات والصمود",
+                question: "المظاهرات كانت أيضاً رداً على تحركات من؟",
+                options: ["الأمم المتحدة", "المستوطنين المتطرفين (FAF)", "الدول المجاورة", "الصحافة العالمية"],
+                answer: "المستوطنين المتطرفين (FAF)",
                 cite: 13
             },
              {
-                station: "3. وحشية القمع",
-                question: "ماذا استخدمت قوات الاحتلال ضد المتظاهرين حسب المصادر؟",
-                options: ["ألعاب نارية", "زجاجات المياه", "الرصاص الحي والقنابل المسيلة للدموع", "إطلاق الطيور"],
-                answer: "الرصاص الحي والقنابل المسيلة للدموع",
+                station: "محطة 3: الثبات والصمود",
+                question: "ماذا استخدم الجيش الفرنسي ضد الشعب؟",
+                options: ["الرصاص الحي", "خراطيم المياه", "الهراوات فقط", "الغاز المسيل للدموع فقط"],
+                answer: "الرصاص الحي",
                 cite: 25
             },
             
-            // المحطة 4: الانتصار الدبلوماسي
+            // المحطة 4: النصر
             {
-                station: "4. الانتصار الدبلوماسي",
-                question: "ماذا كان رد فعل الجنرال ديغول بعد مشاهدة الأحداث؟",
-                options: ["التصعيد العسكري الفوري", "تجاهل الأحداث تماماً", "اقتنع بضرورة الدخول في مفاوضات جدية", "طرد السفير الجزائري"],
-                answer: "اقتنع بضرورة الدخول في مفاوضات جدية",
+                station: "محطة 4: الانتصار الدبلوماسي",
+                question: "ماذا أدرك ديغول بعد رؤية المظاهرات؟",
+                options: ["أنه انتصر", "ضرورة التفاوض الجدي", "أنه يحتاج لجيش أكبر", "أن الجزائر فرنسية"],
+                answer: "ضرورة التفاوض الجدي",
                 cite: 33
             },
             {
-                station: "4. الانتصار الدبلوماسي",
-                question: "ماذا حققت الثورة في الأمم المتحدة في 20 ديسمبر 1960 بفضل المظاهرات؟",
-                options: ["قرار بفرض عقوبات على الجزائر", "الاعتراف بحق الجزائر في تقرير مصيرها وإخضاع الاستفتاء لإشرافها", "وقف المفاوضات", "إدانة جبهة التحرير"],
-                answer: "الاعتراف بحق الجزائر في تقرير مصيرها وإخضاع الاستفتاء لإشرافها",
+                station: "محطة 4: الانتصار الدبلوماسي",
+                question: "ماذا قررت الأمم المتحدة بعد المظاهرات؟",
+                options: ["عقوبات على الجزائر", "الاعتراف بحق تقرير المصير", "تجاهل القضية", "دعم فرنسا"],
+                answer: "الاعتراف بحق تقرير المصير",
                 cite: 42
             },
             {
-                station: "4. الانتصار الدبلوماسي",
-                question: "كيف أثرت المظاهرات على جيش التحرير الوطني في الجبال؟",
-                options: ["زادت الضغط عليهم", "خففت الضغط عليهم وأجبرت فرنسا على سحب قواتها إلى المدن", "قللت من إمداداتهم", "أدت إلى تجميد العمليات العسكرية"],
-                answer: "خففت الضغط عليهم وأجبرت فرنسا على سحب قواتها إلى المدن",
+                station: "محطة 4: الانتصار الدبلوماسي",
+                question: "كيف أثرت المظاهرات على المجاهدين في الجبال؟",
+                options: ["خففت الضغط عليهم", "حاصرتهم", "قطعت الإمدادات", "لم تؤثر"],
+                answer: "خففت الضغط عليهم",
                 cite: 50
             }
         ];
 
-        // 3. وظيفة عرض منطقة اللعب وإخفاء شاشة البداية
+        // الوظائف
         function showGame() {
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('game-area').style.display = 'block';
             startGame();
         }
 
-        // 4. وظيفة بدأ اللعبة
         function startGame() {
             currentQuestionIndex = 0;
             correctAnswersCount = 0;
             fuelPoints = 3;
-            document.getElementById('feedback').textContent = '';
-            // تعيين أيقونة القطار في البداية
+            document.getElementById('feedback').style.display = 'none';
+            
+            // إعادة تعيين القطار
             document.getElementById('train-icon').style.left = '0%';
             document.getElementById('train-progress').style.width = '0%';
+            
+            updateFuelUI();
             loadQuestion();
-            updateFuel();
         }
 
-        // 5. تحميل السؤال الحالي
+        function updateFuelUI() {
+            const container = document.getElementById('fuel-icons');
+            container.innerHTML = '';
+            for(let i=0; i<3; i++) {
+                const icon = document.createElement('span');
+                icon.className = 'fuel-icon';
+                // نستخدم قلوب أو شعلة لتمثيل الوقود/المحاولات
+                icon.textContent = i < fuelPoints ? '❤️' : '🤍';
+                container.appendChild(icon);
+            }
+        }
+
         function loadQuestion() {
             if (currentQuestionIndex >= totalQuestions) {
                 return endGame(true);
             }
 
             const data = quizData[currentQuestionIndex];
-            const stationNumber = Math.floor(currentQuestionIndex / (totalQuestions / totalStations)) + 1;
-            document.getElementById('station-title').textContent = `المحطة ${stationNumber} من ${totalStations}: ${data.station}`;
+            document.getElementById('station-title').textContent = data.station;
             document.getElementById('question-text').textContent = data.question;
             
             const choicesDiv = document.getElementById('choices');
@@ -297,13 +453,12 @@
                 const button = document.createElement('button');
                 button.className = 'choice-btn';
                 button.textContent = option;
-                button.onclick = () => checkAnswer(button, option, data.answer, data.cite);
+                button.onclick = () => checkAnswer(button, option, data.answer);
                 choicesDiv.appendChild(button);
             });
-            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').style.display = 'none';
         }
         
-        // 6. وظيفة خلط المصفوفة
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -312,93 +467,95 @@
             return array;
         }
 
-        // 7. التحقق من الإجابة
-        function checkAnswer(selectedButton, selectedOption, correctAnswer, citation) {
+        function checkAnswer(selectedButton, selectedOption, correctAnswer) {
+            // تعطيل جميع الأزرار
             const allButtons = document.querySelectorAll('.choice-btn');
             allButtons.forEach(btn => btn.disabled = true); 
 
+            const feedbackEl = document.getElementById('feedback');
+            feedbackEl.style.display = 'block';
+
             if (selectedOption === correctAnswer) {
+                // إجابة صحيحة
                 selectedButton.classList.add('correct');
                 correctAnswersCount++;
+                
+                // تحديث القطار
                 const progress = (correctAnswersCount / totalQuestions) * 100;
-                
-                // تحديث شريط التقدم وحركة الأيقونة
                 document.getElementById('train-progress').style.width = progress + '%';
-                // نحتاج إلى طرح عرض القطار نفسه ليتوقف عند نهاية الشريط الأخضر وليس خارجه
-                // بما أن القطار 🚂 حجمه ثابت، نستخدم حساب تقريبي بناءً على النسبة
-                const trainIcon = document.getElementById('train-icon');
-                const iconPosition = progress > 0 ? `calc(${progress}% - 25px)` : '0%';
-                trainIcon.style.left = iconPosition;
-                
-                document.getElementById('feedback').innerHTML = `✅ إجابة صحيحة! القطار يتقدم...`;
-                document.getElementById('feedback').style.backgroundColor = 'rgba(0, 255, 0, 0.1)';
-                
-                fuelPoints = Math.min(5, fuelPoints + 0.5); // مكافأة وقود بسيطة
+                // نحسب موضع الأيقونة (نطرح قليلاً لتكون في مقدمة الشريط)
+                const iconPos = `calc(${progress}% - 20px)`;
+                document.getElementById('train-icon').style.left = progress === 0 ? '0%' : iconPos;
 
+                feedbackEl.textContent = "أحسنت! إجابة صحيحة ✅";
+                feedbackEl.style.backgroundColor = "#dcfce7";
+                feedbackEl.style.color = "#166534";
+                
                 setTimeout(() => {
                     currentQuestionIndex++;
                     loadQuestion();
-                    updateFuel();
-                }, 1500);
+                }, 1200);
+
             } else {
+                // إجابة خاطئة
                 selectedButton.classList.add('incorrect');
                 
+                // تلوين الإجابة الصحيحة
                 allButtons.forEach(btn => {
-                    if (btn.textContent === correctAnswer) {
-                        btn.classList.add('correct');
-                    }
+                    if (btn.textContent === correctAnswer) btn.classList.add('correct');
                 });
-                
+
                 fuelPoints--;
-                document.getElementById('feedback').innerHTML = `❌ إجابة خاطئة! الإجابة الصحيحة كانت: ${correctAnswer}.`;
-                document.getElementById('feedback').style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
-                
+                updateFuelUI();
+
+                feedbackEl.textContent = "خطأ! ❌";
+                feedbackEl.style.backgroundColor = "#fee2e2";
+                feedbackEl.style.color = "#991b1b";
+
                 if (fuelPoints <= 0) {
-                    setTimeout(() => endGame(false), 3000);
+                    setTimeout(() => endGame(false), 2000);
                 } else {
                     setTimeout(() => {
-                        currentQuestionIndex++; 
+                        currentQuestionIndex++;
                         loadQuestion();
-                        updateFuel();
-                    }, 3000);
+                    }, 2000);
                 }
             }
         }
 
-        // 8. تحديث مؤشر الوقود
-        function updateFuel() {
-            document.getElementById('fuel-count').textContent = Math.max(0, Math.floor(fuelPoints));
-        }
-
-        // 9. نهاية اللعبة
         function endGame(success) {
             const gameArea = document.getElementById('game-area');
-            const finalScore = `أجبت على ${correctAnswersCount} سؤالاً من أصل ${totalQuestions}.`;
+            let content = '';
             
-            let finalMessage = '';
-
             if (success) {
-                finalMessage = `🎉 تهانينا! لقد وصل قطار الاستقلال محطة النصر. ${finalScore} لقد أدركت التأثير الكامل لمظاهرات 11 ديسمبر 1960.`;
+                content = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 50px; margin-bottom: 10px;">🎉🇩🇿</div>
+                        <h2 style="color: var(--color-green);">وصل القطار إلى الاستقلال!</h2>
+                        <p>تهانينا! لقد أجبت على ${correctAnswersCount} سؤالاً وأثبت معرفتك بتاريخ ثورتنا المجيدة.</p>
+                        <p style="font-size: 0.9rem; color: #666;">"وعقدنا العزم أن تحيا الجزائر"</p>
+                    </div>
+                `;
             } else {
-                finalMessage = `😭 توقف قطار الاستقلال... نفد وقود النصر! ${finalScore} يجب عليك مراجعة أحداث المظاهرات وإعادة المحاولة!`;
+                content = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 50px; margin-bottom: 10px;">🛑</div>
+                        <h2 style="color: var(--color-red);">نفد الوقود!</h2>
+                        <p>توقف القطار قبل الوصول للمحطة النهائية. لا تيأس، المحاولة هي طريق النجاح.</p>
+                    </div>
+                `;
             }
 
-            gameArea.innerHTML = `<h2>نهاية الرحلة!</h2><p class="question-text">${finalMessage}</p>`;
+            // زر إعادة اللعب
+            content += `
+                <button onclick="location.reload()" class="choice-btn" style="background-color: var(--color-text); color: white; border: none; margin-top: 20px;">
+                    إعادة الرحلة 🔄
+                </button>
+                 <div class="author-info">إعداد: حماد بن عيسى</div>
+            `;
             
-            const restartButton = document.createElement('button');
-            restartButton.className = 'choice-btn';
-            restartButton.textContent = 'إعادة الرحلة';
-            restartButton.style.backgroundColor = 'var(--color-red)';
-            restartButton.onclick = () => window.location.reload();
-            gameArea.appendChild(restartButton);
-
-            const authorInfo = document.createElement('div');
-            authorInfo.className = 'author-info';
-            authorInfo.textContent = 'من إعداد الكاتب: حماد بن عيسى';
-            gameArea.appendChild(authorInfo);
+            gameArea.innerHTML = content;
         }
-
-        // يتم تشغيل اللعبة عند تحميل الصفحة (تظهر شاشة البداية أولاً)
     </script>
 </body>
 </html>

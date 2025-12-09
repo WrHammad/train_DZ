@@ -5,64 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قطار الاستقلال: اختبار 11 ديسمبر</title>
     <style>
-        /* CSS للتصميم باستخدام ألوان العلم الجزائري */
+        /* CSS للتصميم باستخدام ألوان العلم الجزائري وتحسينات الهاتف */
         :root {
             --color-green: #006241; /* أخضر العلم */
             --color-white: #FFFFFF; /* أبيض العلم */
             --color-red: #E70013;   /* أحمر العلم */
+            --color-black: #1a1a1a;
             --color-bg-light: #f0f4f8;
-            --color-text: #333;
+            --color-text: var(--color-black);
+            --touch-target-min: 48px; /* معيار حجم زر اللمس */
         }
         body {
             font-family: 'Arial', sans-serif;
             background-color: var(--color-bg-light);
             color: var(--color-text);
-            padding: 20px;
+            padding: 10px; /* تقليل الحشو للهاتف */
             text-align: center;
+            line-height: 1.5;
         }
-        h1 { color: var(--color-red); margin-bottom: 5px; }
-        h2 { color: var(--color-green); }
+        /* العناوين والمنطقة الرئيسية */
+        h1 { color: var(--color-red); margin-bottom: 8px; font-size: 1.8em; }
+        h2 { color: var(--color-green); font-size: 1.5em; }
         #game-area, #start-screen {
             background-color: var(--color-white);
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            border: 3px solid var(--color-green);
+            padding: 20px 15px;
+            border-radius: 15px; /* زوايا أكثر استدارة */
+            max-width: 650px; /* زيادة بسيطة للعرض */
+            margin: 15px auto;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); /* ظل أقوى */
+            border: 4px solid var(--color-green); /* حدود أوضح */
         }
         /* تصميم صفحة البداية */
-        #start-screen p { font-size: 1.1em; line-height: 1.6; }
-        .author-info { margin-top: 20px; font-style: italic; color: #666; font-size: 0.9em; }
+        #start-screen p { font-size: 1.15em; line-height: 1.7; }
+        #start-screen ul { padding-right: 20px; text-align: right; font-size: 1.05em;}
+        .author-info { margin-top: 25px; font-style: italic; color: #444; font-size: 1em; }
 
-        /* شريط تقدم القطار */
-        #progress-bar { height: 35px; background-color: #ccc; border-radius: 18px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--color-green); }
-        #train-progress { height: 100%; width: 0%; background-color: var(--color-green); transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: flex-end; }
-        #train-icon { font-size: 22px; margin-left: 10px; color: var(--color-red); animation: bounce 1s infinite alternate; }
-        @keyframes bounce { from { transform: translateY(0px); } to { transform: translateY(-5px); } }
+        /* شريط تقدم القطار (الخريطة الزمنية) */
+        #progress-bar {
+            height: var(--touch-target-min);
+            background: repeating-linear-gradient(
+                to right,
+                var(--color-white), var(--color-white) 24.5%,
+                var(--color-red) 24.5%, var(--color-red) 25.5%, /* فواصل حمراء للمحطات */
+                var(--color-white) 25.5%, var(--color-white) 49.5%,
+                var(--color-red) 49.5%, var(--color-red) 50.5%,
+                var(--color-white) 50.5%, var(--color-white) 74.5%,
+                var(--color-red) 74.5%, var(--color-red) 75.5%,
+                var(--color-white) 75.5%, var(--color-white) 100%
+            );
+            border-radius: 18px; 
+            overflow: hidden; 
+            margin-bottom: 25px; 
+            border: 2px solid var(--color-green);
+            position: relative; /* للسماح بوضع الأيقونة داخله */
+        }
+        #train-progress { 
+            height: 100%; 
+            background-color: var(--color-green); 
+            transition: width 0.7s ease-out; /* حركة أبطأ وأكثر سلاسة */
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-end; 
+            opacity: 0.8;
+        }
+        #train-icon { 
+            font-size: 28px; /* حجم أكبر للهاتف */
+            color: var(--color-red); 
+            text-shadow: 1px 1px 2px var(--color-black); /* ظل واضح */
+            margin-right: -10px; /* سحب الأيقونة للخارج قليلاً */
+            animation: bounce 1s infinite alternate, pulse 1.5s infinite; 
+            position: absolute; /* وضع الأيقونة فوق شريط التقدم */
+            transition: left 0.7s ease-out;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        @keyframes bounce { from { transform: translateY(-50%); } to { transform: translateY(-60%); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
         
         /* منطقة الأسئلة والأزرار */
-        .question-text { font-size: 1.3em; margin-bottom: 20px; font-weight: bold; color: var(--color-red); }
+        .question-text { font-size: 1.4em; margin-bottom: 25px; font-weight: bold; color: var(--color-black); }
         .choice-btn {
             display: block; 
-            width: 100%; 
+            min-height: var(--touch-target-min); /* هدف لمس مثالي */
+            width: 95%; /* أضيق قليلا من الحاوية لتبدو أفضل */
             padding: 12px; 
-            margin: 10px 0; 
+            margin: 10px auto; 
             background-color: var(--color-green); 
             color: var(--color-white); 
-            border: none; 
-            border-radius: 8px; 
+            border: 2px solid var(--color-white); /* حدود بيضاء للتباين */
+            border-radius: 10px; 
             cursor: pointer; 
-            transition: background-color 0.2s, transform 0.1s;
-            font-size: 1em;
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.1s;
+            font-size: 1.1em; /* خط أكبر */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .choice-btn:hover { background-color: #004d99; transform: translateY(-1px); }
-        .choice-btn.correct { background-color: darkgreen; }
-        .choice-btn.incorrect { background-color: var(--color-red); }
-        .choice-btn:disabled { opacity: 0.7; cursor: not-allowed; }
-        #feedback { margin-top: 15px; font-size: 1.1em; padding: 5px; border-radius: 5px;}
-        #fuel-indicator { font-weight: bold; color: var(--color-red); margin-bottom: 15px; font-size: 1.1em;}
-        #start-button { background-color: var(--color-red); font-size: 1.2em; padding: 15px; }
+        .choice-btn:active { transform: translateY(1px); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .choice-btn:hover:not(:disabled) { background-color: #004d99; }
+        .choice-btn.correct { background-color: darkgreen; border-color: var(--color-white); }
+        .choice-btn.incorrect { background-color: var(--color-red); border-color: var(--color-white); }
+        .choice-btn:disabled { opacity: 0.8; cursor: not-allowed; }
+        #feedback { margin-top: 20px; font-size: 1.2em; padding: 10px; border-radius: 8px; font-weight: bold;}
+        #fuel-indicator { font-weight: bold; color: var(--color-red); margin-bottom: 20px; font-size: 1.2em; border-bottom: 2px dashed #ccc; padding-bottom: 10px;}
+        #start-button { background-color: var(--color-red); font-size: 1.3em; padding: 15px; border-color: var(--color-white); }
         
     </style>
 </head>
@@ -76,13 +120,13 @@
         
         <ul>
             <li style="text-align: right; margin-bottom: 10px;">
-                <strong>المحطات والأسئلة:</strong> كل محطة تحتوي على 3 أسئلة تاريخية. إجابتك الصحيحة هي وقود القطار الذي يسرعه نحو الاستقلال.
+                <strong>المحطات والأسئلة:</strong> الرحلة مقسمة إلى 4 محطات (محاور تاريخية). كل محطة تحتوي على 3 أسئلة (المجموع 12 سؤال). إجابتك الصحيحة هي وقود القطار الذي يسرعه نحو الاستقلال.
             </li>
             <li style="text-align: right; margin-bottom: 10px;">
                 <strong>وقود النصر:</strong> لديك 3 فرص محاولة (وقود نصر). الإجابة الخاطئة تستنزف الوقود. نفاد الوقود يؤدي إلى توقف القطار وفشل المهمة.
             </li>
             <li style="text-align: right;">
-                <strong>الهدف:</strong> الإجابة على جميع الأسئلة الـ 12 بنجاح للوصول إلى محطة النصر النهائي.
+                <strong>الهدف:</strong> الإجابة على جميع الأسئلة الـ 12 بنجاح للوصول إلى محطة النصر النهائي والاحتفال بالانتصار الدبلوماسي.
             </li>
         </ul>
 
@@ -98,7 +142,8 @@
 
         <!-- شريط تقدم القطار -->
         <div id="progress-bar">
-            <div id="train-progress"><span id="train-icon">🚂</span></div>
+            <div id="train-progress"></div>
+             <span id="train-icon">🚂</span>
         </div>
 
         <h2 id="station-title">...</h2>
@@ -225,6 +270,8 @@
             correctAnswersCount = 0;
             fuelPoints = 3;
             document.getElementById('feedback').textContent = '';
+            // تعيين أيقونة القطار في البداية
+            document.getElementById('train-icon').style.left = '0%';
             document.getElementById('train-progress').style.width = '0%';
             loadQuestion();
             updateFuel();
@@ -274,7 +321,15 @@
                 selectedButton.classList.add('correct');
                 correctAnswersCount++;
                 const progress = (correctAnswersCount / totalQuestions) * 100;
+                
+                // تحديث شريط التقدم وحركة الأيقونة
                 document.getElementById('train-progress').style.width = progress + '%';
+                // نحتاج إلى طرح عرض القطار نفسه ليتوقف عند نهاية الشريط الأخضر وليس خارجه
+                // بما أن القطار 🚂 حجمه ثابت، نستخدم حساب تقريبي بناءً على النسبة
+                const trainIcon = document.getElementById('train-icon');
+                const iconPosition = progress > 0 ? `calc(${progress}% - 25px)` : '0%';
+                trainIcon.style.left = iconPosition;
+                
                 document.getElementById('feedback').innerHTML = `✅ إجابة صحيحة! القطار يتقدم...`;
                 document.getElementById('feedback').style.backgroundColor = 'rgba(0, 255, 0, 0.1)';
                 
@@ -302,7 +357,6 @@
                     setTimeout(() => endGame(false), 3000);
                 } else {
                     setTimeout(() => {
-                        // الانتقال للسؤال التالي حتى لا يتعثر اللاعب
                         currentQuestionIndex++; 
                         loadQuestion();
                         updateFuel();
